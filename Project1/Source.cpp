@@ -82,11 +82,10 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //create window
 //1. register a window class
 //2. create window
-
 HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHeight)
 {
 	WNDCLASSEX wc;
-	
+
 	wc.cbSize = sizeof(WNDCLASSEX);
 
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -95,7 +94,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = NULL;
+	wc.hIcon = 0;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
@@ -131,15 +130,19 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	return hWnd;
 }
 
+//update function
 void Update(DWORD dt)
 {
 
 }
 
+//render function
 void Render()
 {
 
 }
+
+//game loop
 
 int Run()
 {
@@ -147,6 +150,7 @@ int Run()
 	DWORD frameStart = GetTickCount();
 	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 	int done = 0;
+
 	while (!done)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -155,13 +159,12 @@ int Run()
 			{
 				done = 1;
 			}
-
+			
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
 		DWORD now = GetTickCount();
-
 		DWORD dt = now - frameStart;
 
 		if (dt >= tickPerFrame)
@@ -174,9 +177,9 @@ int Run()
 		{
 			Sleep(tickPerFrame - dt);
 		}
-		
 	}
 
 	return 1;
-	
+
 }
+
