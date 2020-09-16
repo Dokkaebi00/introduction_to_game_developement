@@ -28,7 +28,11 @@ WARNING: This example contains a hell LOT of *sinful* programming practices
 
 #define BRICK_TEXTURE_PATH L"brick.png"
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 0, 0)
+HWND hWnd = 0;
+
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
+
+#define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 
@@ -39,7 +43,19 @@ LPDIRECT3D9 d3d = NULL;						// Direct3D handle
 LPDIRECT3DDEVICE9 d3ddv = NULL;				// Direct3D device object
 
 LPDIRECT3DSURFACE9 backBuffer = NULL;
+
+int BackBufferWidth = 0;
+int BackBufferHeight = 0;
+
 LPD3DXSPRITE spriteHandler = NULL;			// Sprite helper library to help us draw 2D image on the screen 
+
+
+#define BRICK_TEXTURE_PATH L"brick.png"
+#define BRICK_START_X 30.0f
+#define BRICK_START_Y 10.0f
+#define BRICK_START_VX 0.2f
+#define BRICK_WIDTH 16.0f
+
 
 LPDIRECT3DTEXTURE9 texBrick;				// texture object to store brick image
 
@@ -78,10 +94,11 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
+
 //create window
 //1. register a window class
 //2. create window
-HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHeight)
+HWND CreatGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreeHeight)
 {
 	WNDCLASSEX wc;
 
@@ -109,7 +126,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		ScreenWidth,
-		ScreenHeight,
+		ScreeHeight,
 		NULL,
 		NULL,
 		hInstance,
@@ -127,7 +144,6 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	UpdateWindow(hWnd);
 
 	return hWnd;
-
 }
 
 //update function
@@ -148,7 +164,7 @@ int Run()
 	MSG msg;
 	int done = 0;
 	DWORD frameStart = GetTickCount();
-	DWORD tickPerFrame = 1000 / frameStart;
+	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 
 	while (!done)
 	{
@@ -158,7 +174,7 @@ int Run()
 			{
 				done = 1;
 			}
-			
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -174,11 +190,12 @@ int Run()
 		}
 		else
 		{
-			Sleep(dt - tickPerFrame);
+			Sleep(tickPerFrame - dt);
 		}
 	}
 
 	return 1;
 }
+
 //init directx
 
