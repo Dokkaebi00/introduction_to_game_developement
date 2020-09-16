@@ -78,7 +78,6 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	return 0;
 }
-
 //create window
 //1. register a window class
 //2. create window
@@ -94,7 +93,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpfnWndProc = (WNDPROC)WinProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hIcon = 0;
+	wc.hIcon = NULL;
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = NULL;
@@ -128,6 +127,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	UpdateWindow(hWnd);
 
 	return hWnd;
+
 }
 
 //update function
@@ -143,13 +143,12 @@ void Render()
 }
 
 //game loop
-
 int Run()
 {
 	MSG msg;
-	DWORD frameStart = GetTickCount();
-	DWORD tickPerFrame = 1000 / MAX_FRAME_RATE;
 	int done = 0;
+	DWORD frameStart = GetTickCount();
+	DWORD tickPerFrame = 1000 / frameStart;
 
 	while (!done)
 	{
@@ -175,11 +174,11 @@ int Run()
 		}
 		else
 		{
-			Sleep(tickPerFrame - dt);
+			Sleep(dt - tickPerFrame);
 		}
 	}
 
 	return 1;
-
 }
+//init directx
 
