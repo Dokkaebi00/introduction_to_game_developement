@@ -98,12 +98,12 @@ LRESULT CALLBACK WinProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //create window
 //1. register a window class
 //2. create window
-HWND CreatGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreeHeight)
+HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int ScreenHeight)
 {
 	WNDCLASSEX wc;
 
 	wc.cbSize = sizeof(WNDCLASSEX);
-
+	
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hInstance = hInstance;
 
@@ -126,7 +126,7 @@ HWND CreatGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Scr
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		ScreenWidth,
-		ScreeHeight,
+		ScreenHeight,
 		NULL,
 		NULL,
 		hInstance,
@@ -198,4 +198,47 @@ int Run()
 }
 
 //init directx
+void InitDirectX(HWND hWnd)
+{
+	//create directx's environment
+	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
+	//update parameter
+	D3DPRESENT_PARAMETERS d3dpp;
+
+	ZeroMemory(&d3dpp, sizeof(d3dpp));
+
+	d3dpp.Windowed = TRUE;
+	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	d3dpp.BackBufferFormat = D3DFMT_X8R8G8B8;
+	d3dpp.BackBufferCount = 1;
+
+	RECT r;
+	GetClientRect(hWnd, &r);
+
+	d3dpp.BackBufferWidth = r.right + 1;
+	d3dpp.BackBufferHeight = r.bottom + 1;
+
+	//create device
+	d3d->CreateDevice(
+		D3DADAPTER_DEFAULT,
+		D3DDEVTYPE_HAL,
+		hWnd,
+		D3DCREATE_SOFTWARE_VERTEXPROCESSING,
+		&d3dpp,
+		&d3ddv
+	);
+
+	if (d3ddv == NULL)
+	{
+		DebugOut(L"[ERROR] CreateDevice failed\n %s %d", __FILE__, __LINE__);
+		return;
+	}
+
+	d3ddv->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backBuffer);
+
+	//initialize direct3dx helper library for sprite
+	D3DXCreateSprite(d3ddv, &spriteHandler);
+
+	DebugOut(L"[INFO] InitDirectX OK\n")
+}
