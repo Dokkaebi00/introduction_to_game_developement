@@ -103,7 +103,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	WNDCLASSEX wc;
 
 	wc.cbSize = sizeof(WNDCLASSEX);
-	
+
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.hInstance = hInstance;
 
@@ -198,12 +198,10 @@ int Run()
 }
 
 //init directx
-void InitDirectX(HWND hWnd)
+void IntiDirectX(HWND hWnd)
 {
-	//create directx's environment
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
-	//update parameter
 	D3DPRESENT_PARAMETERS d3dpp;
 
 	ZeroMemory(&d3dpp, sizeof(d3dpp));
@@ -219,7 +217,6 @@ void InitDirectX(HWND hWnd)
 	d3dpp.BackBufferWidth = r.right + 1;
 	d3dpp.BackBufferHeight = r.bottom + 1;
 
-	//create device
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,
 		D3DDEVTYPE_HAL,
@@ -237,8 +234,35 @@ void InitDirectX(HWND hWnd)
 
 	d3ddv->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &backBuffer);
 
-	//initialize direct3dx helper library for sprite
 	D3DXCreateSprite(d3ddv, &spriteHandler);
 
-	DebugOut(L"[INFO] InitDirectX OK\n")
+	DebugOut(L"[INFO] InitDirectX OK\n");
+}
+
+void LoadResources()
+{
+	HRESULT result = D3DXCreateTextureFromFileEx(
+		d3ddv,
+		BRICK_TEXTURE_PATH,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		1,
+		D3DUSAGE_DYNAMIC,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_DEFAULT,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		D3DCOLOR_XRGB(255, 255, 255),
+		NULL,
+		NULL,
+		&texBrick
+	);
+
+	if (result != D3D_OK)
+	{
+		DebugOut(L"[ERROR] CreateTextureFromFileEx %s failed\n", BRICK_TEXTURE_PATH);
+		return;
+	}
+
+	DebugOut(L"[INFO] Texture loaded Ok: %s \n", BRICK_TEXTURE_PATH);
 }
