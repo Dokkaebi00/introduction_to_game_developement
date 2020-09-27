@@ -24,13 +24,14 @@ WARNING: This example contains a hell LOT of *sinful* programming practices
 #include <stdlib.h>
 
 #define WINDOW_CLASS_NAME L"SampleWindow"
+#define WINDOW_TITLE L"00 - Intro"
 #define MAIN_WINDOW_TITLE L"00 - Intro"
 
 #define BRICK_TEXTURE_PATH L"brick.png"
 
 HWND hWnd = 0;
 
-#define BACKGROUND_COLOR D3DCOLOR_XRGB(255, 255, 255)
+#define D3DCOLOR_WHITE D3DCOLOR_XRGB(255, 255, 255)
 
 #define BACKGROUND_COLOR D3DCOLOR_XRGB(0, 0, 0)
 #define SCREEN_WIDTH 640
@@ -78,6 +79,13 @@ void DebugOut(const wchar_t* fmt, ...)
 	wchar_t s[4096];
 	VA_PRINTS(s);
 	OutputDebugString(s);
+}
+
+void DebugOutTitle(const wchar_t* fmt, ...)
+{
+	wchar_t s[1024];
+	VA_PRINTS(s);
+	SetWindowText(hWnd, s);
 }
 
 //call-back function
@@ -149,13 +157,41 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 //update function
 void Update(DWORD dt)
 {
+	brick_x = brick_x + brick_vx * dt;
+	if (brick_x <= 0 || brick_x >= BackBufferWidth - BRICK_WIDTH)
+	{
+		brick_vx = -brick_vx;
+	}
 
+	if (brick_x <= 0)
+	{
+		brick_x = 0;
+	}
+	if (brick_x >= BackBufferWidth - BRICK_WIDTH)
+	{
+		brick_x = BackBufferWidth - BRICK_WIDTH;
+	}
 }
 
 //render function
 void Render()
 {
+	if (d3ddv->BeginScene())
+	{
+		d3ddv->ColorFill(backBuffer, NULL, BACKGROUND_COLOR);
 
+		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
+
+		D3DXVECTOR3 p(brick_x, brick_y, 0);
+		spriteHandler->Draw(texBrick, NULL, NULL, &p, D3DCOLOR_WHITE);
+
+		DebugOutTitle(L"%s (%0.1f,%0.1f) v:%0.1f", WINDOW_TITLE, brick_x, brick_y, brick_vx);
+		
+		spriteHandler->End();
+		d3ddv->EndScene();
+	}
+
+	d3ddv->Present(NULL, NULL, NULL, NULL);
 }
 
 //game loop
@@ -198,7 +234,7 @@ int Run()
 }
 
 //init directx
-void IntiDirectX(HWND hWnd)
+void InitDirectX(HWND hWnd)
 {
 	d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -213,6 +249,9 @@ void IntiDirectX(HWND hWnd)
 
 	RECT r;
 	GetClientRect(hWnd, &r);
+
+	BackBufferWidth = r.right + 1;
+	BackBufferHeight = r.bottom + 1;
 
 	d3dpp.BackBufferWidth = r.right + 1;
 	d3dpp.BackBufferHeight = r.bottom + 1;
@@ -239,6 +278,7 @@ void IntiDirectX(HWND hWnd)
 	DebugOut(L"[INFO] InitDirectX OK\n");
 }
 
+//load resource from file
 void LoadResources()
 {
 	HRESULT result = D3DXCreateTextureFromFileEx(
@@ -265,4 +305,31 @@ void LoadResources()
 	}
 
 	DebugOut(L"[INFO] Texture loaded Ok: %s \n", BRICK_TEXTURE_PATH);
+}
+
+void CleanUp()
+{
+	texBrick->Release();
+	spriteHandler->Release();
+	backBuffer->Release();
+	d3ddv->Release();
+	d3d->Release();
+
+	DebugOut(L"[INFO] Cleanup Ok\n");
+}
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (hWnd == 0)
+	{
+		return 0;
+	}
+
+	InitDirectX(hWnd);
+	LoadResources();
+	Run();
+	CleanUp();
+
+	return 0;
+
 }
