@@ -124,7 +124,7 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 	wc.lpszMenuName = NULL;
 	wc.lpszClassName = WINDOW_CLASS_NAME;
 	wc.hIconSm = NULL;
-
+	
 	RegisterClassEx(&wc);
 
 	HWND hWnd = CreateWindow(
@@ -157,20 +157,23 @@ HWND CreateGameWindow(HINSTANCE hInstance, int nCmdShow, int ScreenWidth, int Sc
 //update function
 void Update(DWORD dt)
 {
-	brick_x = brick_x + brick_vx * dt;
-	if (brick_x <= 0 || brick_x >= BackBufferWidth - BRICK_WIDTH)
-	{
-		brick_vx = -brick_vx;
-	}
+	brick_x += brick_vx*dt; 
 
-	if (brick_x <= 0)
-	{
-		brick_x = 0;
-	}
-	if (brick_x >= BackBufferWidth - BRICK_WIDTH)
-	{
-		brick_x = BackBufferWidth - BRICK_WIDTH;
-	}
+	if (brick_x <= 0 || brick_x >= BackBufferWidth - BRICK_WIDTH) 
+	{ 
+		
+		brick_vx = -brick_vx;
+
+		//Why not having these logics would make the brick disappear sometimes?  
+		if (brick_x <= 0)
+		{
+			brick_x = 0;
+		}
+		else if (brick_x >= BackBufferWidth - BRICK_WIDTH)
+		{
+			brick_x = BackBufferWidth - BRICK_WIDTH;
+		}
+	} 
 }
 
 //render function
@@ -178,15 +181,15 @@ void Render()
 {
 	if (d3ddv->BeginScene())
 	{
-		d3ddv->ColorFill(backBuffer, NULL, BACKGROUND_COLOR);
-
+		d3ddv->ColorFill(backBuffer, NULL, D3DCOLOR_XRGB(0, 0, 0));
+		
 		spriteHandler->Begin(D3DXSPRITE_ALPHABLEND);
 
 		D3DXVECTOR3 p(brick_x, brick_y, 0);
 		spriteHandler->Draw(texBrick, NULL, NULL, &p, D3DCOLOR_WHITE);
 
 		DebugOutTitle(L"%s (%0.1f,%0.1f) v:%0.1f", WINDOW_TITLE, brick_x, brick_y, brick_vx);
-		
+
 		spriteHandler->End();
 		d3ddv->EndScene();
 	}
@@ -253,8 +256,8 @@ void InitDirectX(HWND hWnd)
 	BackBufferWidth = r.right + 1;
 	BackBufferHeight = r.bottom + 1;
 
-	d3dpp.BackBufferWidth = r.right + 1;
-	d3dpp.BackBufferHeight = r.bottom + 1;
+	d3dpp.BackBufferWidth = BackBufferWidth;
+	d3dpp.BackBufferHeight = BackBufferHeight;
 
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,
@@ -307,29 +310,35 @@ void LoadResources()
 	DebugOut(L"[INFO] Texture loaded Ok: %s \n", BRICK_TEXTURE_PATH);
 }
 
+//clean up function
 void CleanUp()
 {
-	texBrick->Release();
-	spriteHandler->Release();
-	backBuffer->Release();
-	d3ddv->Release();
 	d3d->Release();
+	d3ddv->Release();
+	backBuffer->Release();
+	spriteHandler->Release();
+	texBrick->Release();
 
 	DebugOut(L"[INFO] Cleanup Ok\n");
 }
+
+//winmain function
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
-	if (hWnd == 0)
+	HWND hWnd = CreateGameWindow(hInstance, nCmdShow, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (!hWnd)
 	{
 		return 0;
 	}
 
 	InitDirectX(hWnd);
+
 	LoadResources();
+
 	Run();
+
 	CleanUp();
 
 	return 0;
-
 }
+
