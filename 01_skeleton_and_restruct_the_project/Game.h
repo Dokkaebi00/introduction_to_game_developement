@@ -22,13 +22,15 @@ class CGame
 	int backBufferHeight = 0;
 
 public:
+
 	void InitDirectX(HWND hWnd);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom);
 	LPDIRECT3DTEXTURE9 LoadTexture(LPCWSTR texturePath);
 
+	LPDIRECT3D9 GetDirect3D();
+	LPDIRECT3DDEVICE9 GetDirect3DDevice();
 	LPDIRECT3DSURFACE9 GetBackBuffer();
-	LPDIRECT3DDEVICE9 GetDevice();
 	LPD3DXSPRITE GetSpriteHandler();
 	int GetBackBufferWidth();
 	int GetBackBufferHeight();
@@ -36,6 +38,5 @@ public:
 	static CGame* GetInstance();
 
 	~CGame();
-
 };
 
