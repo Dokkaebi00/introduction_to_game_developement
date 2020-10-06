@@ -14,15 +14,14 @@ class CGame
 
 	LPDIRECT3D9 d3d = NULL;
 	LPDIRECT3DDEVICE9 d3ddv = NULL;
-	
+
 	LPDIRECT3DSURFACE9 backBuffer = NULL;
 	LPD3DXSPRITE spriteHandler = NULL;
-
+	
 	int backBufferWidth = 0;
 	int backBufferHeight = 0;
 
 public:
-
 	void InitDirectX(HWND hWnd);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture);
 	void Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom);

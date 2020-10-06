@@ -4,7 +4,7 @@
 void CGame::InitDirectX(HWND hWnd)
 {
 	LPDIRECT3D9 d3d = Direct3DCreate9(D3D_SDK_VERSION);
-	
+
 	this->hWnd = hWnd;
 
 	D3DPRESENT_PARAMETERS d3dpp;
@@ -18,12 +18,12 @@ void CGame::InitDirectX(HWND hWnd)
 
 	RECT r;
 	GetClientRect(hWnd, &r);
-
+	
 	backBufferWidth = r.right + 1;
 	backBufferHeight = r.bottom + 1;
 
-	d3dpp.BackBufferWidth = backBufferWidth;
 	d3dpp.BackBufferHeight = backBufferHeight;
+	d3dpp.BackBufferWidth = backBufferWidth;
 
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,
@@ -50,6 +50,7 @@ void CGame::InitDirectX(HWND hWnd)
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
 {
 	D3DXVECTOR3 p(x, y, 0);
+
 	spriteHandler->Draw(texture, NULL, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
@@ -61,13 +62,14 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 	r.top = top;
 	r.right = right;
 	r.bottom = bottom;
+
 	spriteHandler->Draw(texture, &r, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
 LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
 {
 	LPDIRECT3DTEXTURE9 texture;
-	
+
 	LPDIRECT3DDEVICE9 d3ddv = CGame::GetInstance()->GetDirect3DDevice();
 
 	HRESULT result = D3DXCreateTextureFromFileEx(
@@ -87,7 +89,7 @@ LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
 		&texture
 	);
 
-	if (result != D3D_OK);
+	if (result != D3D_OK)
 	{
 		DebugOut(L"[ERROR] CreateTextureFromFile failed. File: %s\n", texturePath);
 		return NULL;
