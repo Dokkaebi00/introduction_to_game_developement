@@ -16,6 +16,10 @@ int CGameObject::GetY()
 	return this->y;
 }
 
+void CGameObject::Update(DWORD dt)
+{
+}
+
 void CGameObject::Render()
 {
 	CGame::GetInstance()->Draw(x, y, texture);
