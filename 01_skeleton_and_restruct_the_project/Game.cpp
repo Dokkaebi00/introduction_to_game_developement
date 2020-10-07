@@ -1,7 +1,9 @@
-#include "Game.h"
 #include "debug.h"
+#include "Game.h"
 
-void CGame::InitDirectX(HWND hWnd)
+CGame* CGame::__instance = NULL;
+
+void CGame::InitDirect3D(HWND hWnd)
 {
 	LPDIRECT3D9 d3d = Direct3DCreate9(D3D_SDK_VERSION);
 
@@ -18,12 +20,12 @@ void CGame::InitDirectX(HWND hWnd)
 
 	RECT r;
 	GetClientRect(hWnd, &r);
-	
+
 	backBufferWidth = r.right + 1;
 	backBufferHeight = r.bottom + 1;
 
-	d3dpp.BackBufferHeight = backBufferHeight;
 	d3dpp.BackBufferWidth = backBufferWidth;
+	d3dpp.BackBufferHeight = backBufferHeight;
 
 	d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,
@@ -50,13 +52,13 @@ void CGame::InitDirectX(HWND hWnd)
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture)
 {
 	D3DXVECTOR3 p(x, y, 0);
-
 	spriteHandler->Draw(texture, NULL, NULL, &p, D3DCOLOR_XRGB(255, 255, 255));
 }
 
 void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top, int right, int bottom)
 {
 	D3DXVECTOR3 p(x, y, 0);
+
 	RECT r;
 	r.left = left;
 	r.top = top;
@@ -68,9 +70,9 @@ void CGame::Draw(float x, float y, LPDIRECT3DTEXTURE9 texture, int left, int top
 
 LPDIRECT3DTEXTURE9 CGame::LoadTexture(LPCWSTR texturePath)
 {
-	LPDIRECT3DTEXTURE9 texture;
-
 	LPDIRECT3DDEVICE9 d3ddv = CGame::GetInstance()->GetDirect3DDevice();
+
+	LPDIRECT3DTEXTURE9 texture;
 
 	HRESULT result = D3DXCreateTextureFromFileEx(
 		d3ddv,

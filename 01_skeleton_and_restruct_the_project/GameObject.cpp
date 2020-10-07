@@ -6,14 +6,19 @@ void CGameObject::SetPosition(float x, float y)
 	this->y = y;
 }
 
-float CGameObject::GetX()
+int CGameObject::GetX()
 {
 	return this->x;
 }
 
-float CGameObject::GetY()
+int CGameObject::GetY()
 {
 	return this->y;
+}
+
+void CGameObject::Render()
+{
+	CGame::GetInstance()->Draw(x, y, texture);
 }
 
 CGameObject::CGameObject(float x, float y, LPDIRECT3DTEXTURE9 texture)
@@ -21,11 +26,6 @@ CGameObject::CGameObject(float x, float y, LPDIRECT3DTEXTURE9 texture)
 	this->x = x;
 	this->y = y;
 	this->texture = texture;
-}
-
-void CGameObject::Render()
-{
-	CGame::GetInstance()->Draw(x, y, texture);
 }
 
 CGameObject::~CGameObject()

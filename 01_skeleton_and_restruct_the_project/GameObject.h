@@ -14,13 +14,13 @@ protected:
 
 public:
 	void SetPosition(float x, float y);
-	float GetX();
-	float GetY();
-
-	CGameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
+	int GetX();
+	int GetY();
 
 	virtual void Update(DWORD dt);
 	virtual void Render();
+
+	CGameObject(float x = 0.0f, float y = 0.0f, LPDIRECT3DTEXTURE9 texture = NULL);
 
 	~CGameObject();
 };

@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OO_Create Window, Init Dire
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01_skeleton_and_restruct_the_project", "01_skeleton_and_restruct_the_project\01_skeleton_and_restruct_the_project.vcxproj", "{DF9145D6-B5BF-41A9-B2F1-A40C46BA1BAC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{DF9145D6-B5BF-41A9-B2F1-A40C46BA1BAC}.Release|x64.Build.0 = Release|x64
 		{DF9145D6-B5BF-41A9-B2F1-A40C46BA1BAC}.Release|x86.ActiveCfg = Release|Win32
 		{DF9145D6-B5BF-41A9-B2F1-A40C46BA1BAC}.Release|x86.Build.0 = Release|Win32
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Debug|x64.ActiveCfg = Debug|x64
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Debug|x64.Build.0 = Debug|x64
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Debug|x86.ActiveCfg = Debug|Win32
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Debug|x86.Build.0 = Debug|Win32
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Release|x64.ActiveCfg = Release|x64
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Release|x64.Build.0 = Release|x64
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Release|x86.ActiveCfg = Release|Win32
+		{B1DDFA75-9AAD-4467-B06D-401DAD5D1B17}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
